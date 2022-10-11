@@ -68,8 +68,19 @@ const createCartItemElement = ({ id, title, price }) => {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `ID: ${id} | TITLE: ${title} | PRICE: $${price}`;
-  li.addEventListener('click', cartItemClickListener);
+  // li.addEventListener('click', cartItemClickListener);
   return li;
+};
+const ol = document.getElementsByClassName('cart__items');
+  console.log(ol);
+
+const findTheId = async (event) => {
+  const section = event.target.parentNode;
+  const id = section.firstChild.innerText;
+  const re = await fetchItem(id);
+  const li = createCartItemElement(re);
+  ol[0].appendChild(li);
+  return re;
 };
 
 window.onload = async () => { 
@@ -78,5 +89,9 @@ window.onload = async () => {
   for (let i = 0; i < resultado.results.length; i += 1) {
     const cria = createProductItemElement(resultado.results[i]);
     sectionn.appendChild(cria);
+  }
+  const buttons = document.getElementsByClassName('item__add');
+  for (let i = 0; i < buttons.length; i += 1) {
+    buttons[i].addEventListener('click', findTheId);
   }
 };
