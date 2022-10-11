@@ -72,8 +72,11 @@ const createCartItemElement = ({ id, title, price }) => {
   return li;
 };
 
-// console.log(fetchProducts('computador'));
-
-window.onload = () => { 
-  console.log(fetchProducts('computador'));
+window.onload = async () => { 
+  const resultado = await fetchProducts('computador');
+  const sectionn = document.querySelector('.items');
+  for (let i = 0; i < resultado.results.length; i += 1) {
+    const cria = createProductItemElement(resultado.results[i]);
+    sectionn.appendChild(cria);
+  }
 };
