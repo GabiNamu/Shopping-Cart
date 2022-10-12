@@ -96,23 +96,23 @@ const emptyCartButton = document.querySelector('.empty-cart');
 console.log(emptyCartButton);
 emptyCartButton.addEventListener('click', emptyCart);
 
-const createElementLoading = (display = 'block') => {
-  const sectionLoading = document.querySelector('.loading');
-  const h3 = document.createElement('h3');
-  h3.innerText = 'Carregando ...';
-  h3.style.display = display;
-  sectionLoading.appendChild(h3);
-  return h3;
-};
+// const createElementLoading = (display = 'block') => {
+//   const sectionLoading = document.querySelector('.loading');
+//   const h3 = document.createElement('h3');
+//   h3.innerText = 'Carregando ...';
+//   h3.style.display = display;
+//   sectionLoading.appendChild(h3);
+//   return h3;
+// };
 
-const elementLoadingHidden = () => {
-  createElementLoading().style.display = 'none';
-};
+// const elementLoadingHidden = () => {
+//   createElementLoading().style.display = 'none';
+// };
 
 window.onload = async () => { 
-  createElementLoading();
+  // createElementLoading();
   const resultado = await fetchProducts('computador');
-  elementLoadingHidden();
+  // elementLoadingHidden();
   const sectionn = document.querySelector('.items');
   for (let i = 0; i < resultado.results.length; i += 1) {
     const cria = createProductItemElement(resultado.results[i]);
