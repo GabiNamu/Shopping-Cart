@@ -88,6 +88,14 @@ const findTheId = async (event) => {
   return re;
 };
 
+const emptyCart = () => {
+  ol[0].innerHTML = '';
+};
+
+const emptyCartButton = document.querySelector('.empty-cart');
+console.log(emptyCartButton);
+emptyCartButton.addEventListener('click', emptyCart);
+
 window.onload = async () => { 
   const resultado = await fetchProducts('computador');
   const sectionn = document.querySelector('.items');
