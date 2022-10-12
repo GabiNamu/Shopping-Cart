@@ -54,7 +54,7 @@ const createProductItemElement = ({ id, title, thumbnail }) => {
  * @param {Element} product - Elemento do produto.
  * @returns {string} ID do produto.
  */
-const getIdFromProductItem = (product) => product.querySelector('span.id').innerText;
+// const getIdFromProductItem = (product) => product.querySelector('span.id').innerText;
 
 /**
  * Função responsável por criar e retornar um item do carrinho.
@@ -96,8 +96,23 @@ const emptyCartButton = document.querySelector('.empty-cart');
 console.log(emptyCartButton);
 emptyCartButton.addEventListener('click', emptyCart);
 
+const createElementLoading = (display = 'block') => {
+  const sectionLoading = document.querySelector('.loading');
+  const h3 = document.createElement('h3');
+  h3.innerText = 'Carregando ...';
+  h3.style.display = display;
+  sectionLoading.appendChild(h3);
+  return h3;
+};
+
+const elementLoadingHidden = () => {
+  createElementLoading().style.display = 'none';
+};
+
 window.onload = async () => { 
+  createElementLoading();
   const resultado = await fetchProducts('computador');
+  elementLoadingHidden();
   const sectionn = document.querySelector('.items');
   for (let i = 0; i < resultado.results.length; i += 1) {
     const cria = createProductItemElement(resultado.results[i]);
