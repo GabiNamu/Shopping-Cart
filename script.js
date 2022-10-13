@@ -110,9 +110,8 @@ const findTheId = async (event) => {
   resultadoSoma += Number(re.price);
   total.innerText = resultadoSoma;
   const li = createCartItemElement(re);
+  // saveCartItems(li.innerText);
   ol[0].appendChild(li);
-  console.log(id);
-
   return re;
 };
 
@@ -124,22 +123,28 @@ const emptyCartButton = document.querySelector('.empty-cart');
 console.log(emptyCartButton);
 emptyCartButton.addEventListener('click', emptyCart);
 
-// const createElementLoading = (display = 'block') => {
-//   const sectionLoading = document.querySelector('.loading');
-//   const h3 = document.createElement('h3');
-//   h3.innerText = 'Carregando ...';
-//   h3.style.display = display;
-//   sectionLoading.appendChild(h3);
-//   return h3;
-// };
+const createElementLoading = async () => {
+  const sectionLoading = document.querySelector('.loading');
+  const h3 = document.createElement('h3');
+  h3.innerText = 'Carregando ...';
+  h3.style.display = 'block';
+  sectionLoading.appendChild(h3);
+  await fetchProducts('computador');
+  sectionLoading.remove();
+
+  return h3;
+};
 
 // const elementLoadingHidden = () => {
-//   createElementLoading().style.display = 'none';
+//   const newa = createElementLoading().display = 'none';
+//   return newa;
 // };
-// createElementLoading();
+
+// elementLoadingHidden();
 
 window.onload = async () => { 
   // createElementLoading();
+  createElementLoading();
   const resultado = await fetchProducts('computador');
   // elementLoadingHidden();
   const sectionn = document.querySelector('.items');
@@ -150,6 +155,6 @@ window.onload = async () => {
   const buttons = document.getElementsByClassName('item__add');
   for (let i = 0; i < buttons.length; i += 1) {
     buttons[i].addEventListener('click', findTheId);
-    // buttons[i].addEventListener('click', priceTotal);
+    // buttons[i].addEventListener('click', priceTotal); 
   }
 };
