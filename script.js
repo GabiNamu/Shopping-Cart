@@ -56,6 +56,8 @@ const createProductItemElement = ({ id, title, thumbnail }) => {
  */
 // const getIdFromProductItem = (product) => product.querySelector('span.id').innerText;
 
+// getIdFromProductItem(fetchItem);
+
 /**
  * Função responsável por criar e retornar um item do carrinho.
  * @param {Object} product - Objeto do produto.
@@ -67,8 +69,23 @@ const createProductItemElement = ({ id, title, thumbnail }) => {
  const ol = document.getElementsByClassName('cart__items');
  console.log(ol);
 
-const cartItemClickListener = (event) => {
+ const total = document.createElement('h3');
+ const sectionTotal = document.querySelector('.total');
+ total.innerText = 0;
+ total.className = 'total-price';
+ sectionTotal.appendChild(total);
+// console.log(sectionTotal);
+let resultadoSoma = 0;
+
+const cartItemClickListener = async (event) => {
   ol[0].removeChild(event.target);
+  const string = event.target.innerText.split(' | ');
+  const stringId = string[0].split(': ');
+  console.log(stringId);
+  const re = await fetchItem(stringId[1]);
+  console.log(re);
+  resultadoSoma -= re.price;
+  total.innerText = resultadoSoma;
 };
 
 const createCartItemElement = ({ id, title, price }) => {
@@ -79,12 +96,23 @@ const createCartItemElement = ({ id, title, price }) => {
   return li;
 };
 
+// const priceTotal = async (id) => {
+//   const result = await fetchItem(id);
+//   console.log(result);
+//   total.innerText += result.price;
+//   return total;
+// };
+
 const findTheId = async (event) => {
   const section = event.target.parentNode;
   const id = section.firstChild.innerText;
   const re = await fetchItem(id);
+  resultadoSoma += Number(re.price);
+  total.innerText = resultadoSoma;
   const li = createCartItemElement(re);
   ol[0].appendChild(li);
+  console.log(id);
+
   return re;
 };
 
@@ -108,6 +136,7 @@ emptyCartButton.addEventListener('click', emptyCart);
 // const elementLoadingHidden = () => {
 //   createElementLoading().style.display = 'none';
 // };
+// createElementLoading();
 
 window.onload = async () => { 
   // createElementLoading();
@@ -121,5 +150,6 @@ window.onload = async () => {
   const buttons = document.getElementsByClassName('item__add');
   for (let i = 0; i < buttons.length; i += 1) {
     buttons[i].addEventListener('click', findTheId);
+    // buttons[i].addEventListener('click', priceTotal);
   }
 };
