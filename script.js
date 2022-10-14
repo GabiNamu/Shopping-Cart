@@ -94,7 +94,7 @@ const cartItemClickListener = async (event) => {
   const re = await fetchItem(stringId[1]);
   console.log(re);
   resultadoSoma -= re.price;
-  total.innerText = resultadoSoma;
+  total.innerText = `Subtotal R$ ${resultadoSoma}`;
 };
 
 const createCartItemElement = ({ id, title, price }) => {
@@ -124,7 +124,7 @@ const createCartLi = () => {
      li.addEventListener('click', cartItemClickListener);
      ol[0].appendChild(li); 
      resultadoSoma += Number(c[1]);
-     total.innerText = resultadoSoma;
+     total.innerText = `Subtotal R$ ${resultadoSoma}`;
   } 
 }
   return 'undefined';
@@ -135,7 +135,7 @@ const findTheId = async (event) => {
   const id = section.firstChild.innerText;
   const re = await fetchItem(id);
   resultadoSoma += Number(re.price);
-  total.innerText = resultadoSoma;
+  total.innerText = `Subtotal R$ ${resultadoSoma}`;
   const li = createCartItemElement(re);
   arrayLi.push(li.innerText);
   // if (getSavedCartItems() !== 'undefined') { 
@@ -150,6 +150,7 @@ const findTheId = async (event) => {
 
 const emptyCart = () => {
   ol[0].innerHTML = '';
+  total.innerText = 'Subtotal R$ 0.00';
 };
 
 const emptyCartButton = document.querySelector('.empty-cart');
