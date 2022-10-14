@@ -77,8 +77,17 @@ const createProductItemElement = ({ id, title, thumbnail }) => {
 // console.log(sectionTotal);
 let resultadoSoma = 0;
 
+let arrayLi = [];
+
 const cartItemClickListener = async (event) => {
   ol[0].removeChild(event.target);
+  const parseStorage = JSON.parse(localStorage.getItem('cartItems'));
+  const length = parseStorage.length - 1;
+   parseStorage.splice(length, 1);
+ arrayLi = parseStorage;
+ console.log(arrayLi);
+   saveCartItems(parseStorage);
+  console.log(parseStorage);
   const string = event.target.innerText.split(' | ');
   const stringId = string[0].split(': ');
   console.log(stringId);
@@ -103,6 +112,24 @@ const createCartItemElement = ({ id, title, price }) => {
 //   return total;
 // };
 
+const createCartLi = () => {
+  const getStorage = getSavedCartItems();
+  if (getStorage !== 'undefined' && getStorage !== null) {
+  for (let i = 0; i < getStorage.length; i += 1) {
+    const a = getStorage[i].split('|');
+    const b = a[2].split(': ');
+    const c = b[1].split('$');
+     const li = document.createElement('li');
+     li.innerText = getStorage[i];
+     li.addEventListener('click', cartItemClickListener);
+     ol[0].appendChild(li); 
+     resultadoSoma += Number(c[1]);
+     total.innerText = resultadoSoma;
+  } 
+}
+  return 'undefined';
+};
+
 const findTheId = async (event) => {
   const section = event.target.parentNode;
   const id = section.firstChild.innerText;
@@ -110,7 +137,13 @@ const findTheId = async (event) => {
   resultadoSoma += Number(re.price);
   total.innerText = resultadoSoma;
   const li = createCartItemElement(re);
-  // saveCartItems(li.innerText);
+  arrayLi.push(li.innerText);
+  // if (getSavedCartItems() !== 'undefined') { 
+  //   arrayLi.concat(getSavedCartItems());
+  //   console.log(arrayLi);
+  // }
+  
+  saveCartItems(arrayLi);
   ol[0].appendChild(li);
   return re;
 };
@@ -143,6 +176,10 @@ const createElementLoading = async () => {
 // elementLoadingHidden();
 
 window.onload = async () => { 
+  if (createCartLi !== 'undefined') {
+    createCartLi();
+  } 
+  // saveCartItems(getSavedCartItems(createCartLi));
   // createElementLoading();
   createElementLoading();
   const resultado = await fetchProducts('computador');

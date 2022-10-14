@@ -13,4 +13,42 @@ describe('4 - Teste a função getSavedCartItems', () => {
     getSavedCartItems();
     expect(localStorage.getItem).toHaveBeenCalledWith('cartItems');
   })
+//  it('', () => {
+//   if (localStorage.getItem('cartItems')) {
+//     const obj = JSON.parse(localStorage.getItem('cartItems'));
+//     expect(getSavedCartItems()).toEqual(obj);
+//   }
+//  })
+  // it('espera um retorno', () => {
+  //   const createCartLi = (param, c) => {
+  //     const li = document.createElement('li');
+  //     li.innerText = param;
+  //     li.addEventListener('click', cartItemClickListener);
+  //     ol[0].appendChild(li);
+  //     resultadoSoma += Number(c[1]);
+  //     total.innerText = resultadoSoma;
+  //   };
+  //   if (localStorage.getItem('cartItems')) {
+  //     expect(getSavedCartItems(createCartLi)).toReturnWith('ok');
+  //   }
+  // })
+
+  // it('', () => {
+  //   const createCartLi = (param, c) => {
+  //     const li = document.createElement('li');
+  //     li.innerText = param;
+  //     li.addEventListener('click', cartItemClickListener);
+  //     ol[0].appendChild(li);
+  //     resultadoSoma += Number(c[1]);
+  //     total.innerText = resultadoSoma;
+  //   };
+  //   getSavedCartItems(createCartLi);
+  //   expect(getSavedCartItems).toHaveBeenCalledWith(createCartLi);
+  // })
+
+  // it('', () => {
+  //   if (localStorage.getItem('cartItems') === 'undefined' || localStorage.getItem('cartItems') === null) {
+  //     expect(getSavedCartItems()).toReturnWith('undefined');
+  //   }
+  // })
 });
