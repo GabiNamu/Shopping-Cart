@@ -1,7 +1,8 @@
+const createUrl = (id) => `https://api.mercadolibre.com/items/${id}`;
+
 const fetchItem = async (id) => {
   try {
-  const url = `https://api.mercadolibre.com/items/${id}`;
-  const response = await fetch(url);
+  const response = await fetch(createUrl(id));
   const objJson = await response.json();
   console.log(objJson.price);
   return objJson;

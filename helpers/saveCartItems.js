@@ -1,5 +1,5 @@
 const saveCartItems = (param) => {
-  if (param !== undefined || param !== null || param !== '') {
+  if (param !== undefined || param !== null) {
   const storage = localStorage.setItem('cartItems', JSON.stringify(param));
   return storage;
   }

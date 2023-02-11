@@ -1,7 +1,8 @@
-const fetchProducts = async (query) => {
+const urlMaker = (product) => `https://api.mercadolibre.com/sites/MLB/search?q=${product}`;
+
+const fetchProducts = async (product) => {
   try {
-  const url = `https://api.mercadolibre.com/sites/MLB/search?q=${query}`;
-  const response = await fetch(url);
+  const response = await fetch(urlMaker(product));
   const objJson = await response.json();
   return objJson;
   } catch (error) {

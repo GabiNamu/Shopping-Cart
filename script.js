@@ -37,12 +37,12 @@ const createCustomElement = (element, className, innerText) => {
  * @param {string} product.thumbnail - URL da imagem do produto.
  * @returns {Element} Elemento de produto.
  */
-const createProductItemElement = ({ id, title, thumbnail }) => {
+const createProductItemElement = ({ id, title, thumbnail, price }) => {
   const section = document.createElement('section');
   section.className = 'item';
-
   section.appendChild(createCustomElement('span', 'item_id', id));
   section.appendChild(createCustomElement('span', 'item__title', title));
+  section.appendChild(createCustomElement('span', 'item__price', `R$ ${price}`));
   section.appendChild(createProductImageElement(thumbnail));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
 
@@ -56,8 +56,6 @@ const createProductItemElement = ({ id, title, thumbnail }) => {
  */
 // const getIdFromProductItem = (product) => product.querySelector('span.id').innerText;
 
-// getIdFromProductItem(fetchItem);
-
 /**
  * Função responsável por criar e retornar um item do carrinho.
  * @param {Object} product - Objeto do produto.
@@ -66,29 +64,33 @@ const createProductItemElement = ({ id, title, thumbnail }) => {
  * @param {string} product.price - Preço do produto.
  * @returns {Element} Elemento de um item do carrinho.
  */
- const ol = document.getElementsByClassName('cart__items');
- console.log(ol);
 
+// a ol que vai agrupar todas as lis que vão compor o carrinho de compras
+ const ol = document.getElementsByClassName('cart__items');
+// criacao do total e pegando a section que ele vai ser adicionado no html
  const total = document.createElement('h3');
  const sectionTotal = document.querySelector('.total');
  total.innerText = 0;
  total.className = 'total-price';
  sectionTotal.appendChild(total);
-// console.log(sectionTotal);
+
+ // foi usado para fazer a soma dos preços e depois foi adicionado no total
 let resultadoSoma = 0;
+// foi usado para adicionar as lis para poder colocar no localStorage 
+const arrayLi = [];
 
-let arrayLi = [];
-
+// tentar sedimentar essa funcao em tres menores 
+// remove o item do carrinho ao ser clicado, diminui o valor do total e acrescenta o getlocalstorage dentro da variavel arrayli
 const cartItemClickListener = async (event) => {
-  ol[0].removeChild(event.target);
+  ol[0].removeChild(event.target.parentNode);
   const parseStorage = JSON.parse(localStorage.getItem('cartItems'));
   const length = parseStorage.length - 1;
    parseStorage.splice(length, 1);
- arrayLi = parseStorage;
+ arrayLi.push(parseStorage);
  console.log(arrayLi);
    saveCartItems(parseStorage);
   console.log(parseStorage);
-  const string = event.target.innerText.split(' | ');
+  const string = event.target.parentNode.innerText.split(' | ');
   const stringId = string[0].split(': ');
   console.log(stringId);
   const re = await fetchItem(stringId[1]);
@@ -97,32 +99,44 @@ const cartItemClickListener = async (event) => {
   total.innerText = `Subtotal R$ ${resultadoSoma}`;
 };
 
+// a funcao que realmente cria as li
 const createCartItemElement = ({ id, title, price }) => {
   const li = document.createElement('li');
-  li.className = 'cart__item';
-  li.innerText = `ID: ${id} | TITLE: ${title} | PRICE: $${price}`;
-  li.addEventListener('click', cartItemClickListener);
+  li.className = 'cart__item allLi';
+  li.innerText = `ID: ${id} | TITLE: ${title}
+  R$${price}`;
+  // li.addEventListener('click', cartItemClickListener);
   return li;
 };
 
-// const priceTotal = async (id) => {
-//   const result = await fetchItem(id);
-//   console.log(result);
-//   total.innerText += result.price;
-//   return total;
-// };
+// cria os elementos do cart como a image de thumbnail, renderiza a li, chama a funcao fetchItem,  cria uma section e coloca um append listener
+const createCartSection = async (li, id) => {
+  const re = await fetchItem(id);
+  const image = createProductImageElement(re.thumbnail);
+  image.style.marginTop = '10px';
+  image.style.borderRadius = '50px';
+     const sectionn = document.createElement('section');
+     sectionn.appendChild(image);
+     sectionn.appendChild(li);
+     sectionn.style.display = 'flex';
+     sectionn.addEventListener('click', cartItemClickListener);
+     return sectionn;
+};
 
-const createCartLi = () => {
+// pega os valores do local storage e acrescenta eles na li e na secao, e adiciona ao total, chama uma funcao, cria a li
+const createCartLi = async () => {
   const getStorage = getSavedCartItems();
   if (getStorage !== 'undefined' && getStorage !== null) {
   for (let i = 0; i < getStorage.length; i += 1) {
     const a = getStorage[i].split('|');
-    const b = a[2].split(': ');
-    const c = b[1].split('$');
+    const c = a[1].split('$');
+    const id = a[0].split(': ');
+    const iD = id[1].split(' ');
      const li = document.createElement('li');
      li.innerText = getStorage[i];
-     li.addEventListener('click', cartItemClickListener);
-     ol[0].appendChild(li); 
+     li.className = 'allLi';
+     const sectionn = await createCartSection(li, iD[0]);
+     ol[0].appendChild(sectionn); 
      resultadoSoma += Number(c[1]);
      total.innerText = `Subtotal R$ ${resultadoSoma}`;
   } 
@@ -130,61 +144,58 @@ const createCartLi = () => {
   return 'undefined';
 };
 
+// 4 funcoes - achar o id, cria a li renderiza ela e acrescenta o preco ao total, coloca no localStorage, cria image e price e chama a funcao createcartsection
 const findTheId = async (event) => {
   const section = event.target.parentNode;
   const id = section.firstChild.innerText;
   const re = await fetchItem(id);
+  const image = createProductImageElement(re.thumbnail);
+  const pricee = re.price;
   resultadoSoma += Number(re.price);
   total.innerText = `Subtotal R$ ${resultadoSoma}`;
   const li = createCartItemElement(re);
   arrayLi.push(li.innerText);
-  // if (getSavedCartItems() !== 'undefined') { 
-  //   arrayLi.concat(getSavedCartItems());
-  //   console.log(arrayLi);
-  // }
-  
   saveCartItems(arrayLi);
-  ol[0].appendChild(li);
+  const sectionn = await createCartSection(li, id);
+  // sectionn.appendChild(pricee);
+  ol[0].appendChild(sectionn);
   return re;
 };
 
+// 1 funcao - limpa o carrinho e atualiza o total 
 const emptyCart = () => {
   ol[0].innerHTML = '';
   total.innerText = 'Subtotal R$ 0.00';
+  resultadoSoma = 0;
+  saveCartItems('');
 };
 
+// pega o botao de esvaziar carrinho e adiciona um eventListener
 const emptyCartButton = document.querySelector('.empty-cart');
-console.log(emptyCartButton);
 emptyCartButton.addEventListener('click', emptyCart);
 
+// 2 funcoes - cria e coloca na tela o elemento com o texto carregando..., troca o cursor 
 const createElementLoading = async () => {
   const sectionLoading = document.querySelector('.loading');
+  const body = document.getElementsByTagName('body');
+  body[0].style.cursor = 'wait';
   const h3 = document.createElement('h3');
   h3.innerText = 'Carregando ...';
   h3.style.display = 'block';
   sectionLoading.appendChild(h3);
   await fetchProducts('computador');
   sectionLoading.remove();
+  body[0].style.cursor = 'pointer';
 
   return h3;
 };
-
-// const elementLoadingHidden = () => {
-//   const newa = createElementLoading().display = 'none';
-//   return newa;
-// };
-
-// elementLoadingHidden();
 
 window.onload = async () => { 
   if (createCartLi !== 'undefined') {
     createCartLi();
   } 
-  // saveCartItems(getSavedCartItems(createCartLi));
-  // createElementLoading();
   createElementLoading();
   const resultado = await fetchProducts('computador');
-  // elementLoadingHidden();
   const sectionn = document.querySelector('.items');
   for (let i = 0; i < resultado.results.length; i += 1) {
     const cria = createProductItemElement(resultado.results[i]);
@@ -193,6 +204,5 @@ window.onload = async () => {
   const buttons = document.getElementsByClassName('item__add');
   for (let i = 0; i < buttons.length; i += 1) {
     buttons[i].addEventListener('click', findTheId);
-    // buttons[i].addEventListener('click', priceTotal); 
   }
 };
