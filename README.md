@@ -8,7 +8,7 @@ Shopping Cart project is a fully dynamic shopping cart. For this, it will consum
 - see the subtotal of the products that are in the cart;
 
 <div align="center" display="inline">
-<img src="./src/img/store.png" alt="store" width="400px" height="250px">
+<img src="./img/store.png" alt="store" width="500px" height="350px">
 </div>
 
 ## How to use:
