@@ -1,11 +1,8 @@
 {
   "name": "sd-0x-project-shopping-cart",
-  "homepage": "https://gabinamu.github.io/Shopping-Cart",
   "version": "1.0.0",
   "main": "script.js",
   "scripts": {
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
     "test": "jest --watchAll",
     "test:coverage": "jest --coverage",
     "cy": "cypress run",
